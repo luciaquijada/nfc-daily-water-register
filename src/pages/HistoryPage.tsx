@@ -1,66 +1,78 @@
+import { useState } from 'react'
 import { useReducedMotion } from 'motion/react'
+import { Droplets } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { HydrationSummaryCard } from '@/features/history/components/HydrationSummaryCard'
-import { StatCard } from '@/features/history/components/StatCard'
+import { HistoryViewTabs, type HistoryView } from '@/features/history/components/HistoryViewTabs'
+import { MonthHistoryPanel } from '@/features/history/components/MonthHistoryPanel'
+import { TodayHistoryPanel } from '@/features/history/components/TodayHistoryPanel'
+import { WeekHistoryPanel } from '@/features/history/components/WeekHistoryPanel'
 import { useHistorySummary } from '@/features/history/hooks/useHistorySummary'
-import { formatMl } from '@/features/hydration/utils/progress'
 
 function HistorySkeleton() {
   return (
-    <div className="flex animate-pulse flex-col gap-4">
-      <div className="h-56 rounded-[26px] bg-surface-muted" />
-      <div className="grid grid-cols-2 gap-3">
-        <div className="h-24 rounded-[18px] bg-surface-muted" />
-        <div className="h-24 rounded-[18px] bg-surface-muted" />
-        <div className="h-24 rounded-[18px] bg-surface-muted" />
-        <div className="h-24 rounded-[18px] bg-surface-muted" />
-      </div>
+    <div className="flex min-h-0 flex-1 animate-pulse flex-col gap-3">
+      <div className="h-28 shrink-0 rounded-[24px] bg-surface-muted" />
+      <div className="min-h-0 flex-1 rounded-[24px] bg-surface-muted" />
+      <div className="h-14 shrink-0 rounded-2xl bg-surface-muted" />
     </div>
   )
 }
 
 export function HistoryPage() {
+  const [view, setView] = useState<HistoryView>('today')
   const { isLoading, isError, refetch, summary } = useHistorySummary()
   const reducedMotion = useReducedMotion() ?? false
 
+  const showEmpty =
+    !isLoading &&
+    !isError &&
+    ((view === 'today' && !summary.hasTodayData) ||
+      (view !== 'today' && !summary.hasData))
+
   return (
-    <div className="flex h-full flex-col overflow-y-auto px-6 pb-6 pt-6">
-      <header className="pb-6 text-center">
-        <h1 className="text-[30px] font-semibold text-text-primary">Historial</h1>
+    <div className="scroll-page flex h-full min-h-0 flex-col overflow-x-hidden page-px pb-3 pt-4">
+      <header className="shrink-0 pb-3">
+        <h1 className="text-heading-lg font-semibold leading-tight text-text-primary">Historial</h1>
       </header>
 
-      {isLoading ? (
-        <HistorySkeleton />
-      ) : isError ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 pb-16 text-center">
-          <p className="text-[15px] text-text-secondary">
-            No se ha podido cargar tu historial. Comprueba tu conexión.
-          </p>
-          <Button variant="surface" onClick={() => void refetch()}>
-            Reintentar
-          </Button>
-        </div>
-      ) : !summary.hasData ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-2 pb-16 text-center">
-          <p className="text-[17px] font-medium text-text-primary">Aún no hay datos</p>
-          <p className="max-w-[16rem] text-[15px] text-text-secondary">
-            Registra agua durante unos días y aquí verás tu evolución.
-          </p>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-4">
-          <HydrationSummaryCard summary={summary} reducedMotion={reducedMotion} />
-          <div className="grid grid-cols-2 gap-3">
-            <StatCard label="Racha actual" value={`${summary.currentStreak} días`} />
-            <StatCard label="Mejor racha" value={`${summary.bestStreak} días`} />
-            <StatCard label="Total semana" value={`${formatMl(summary.weekTotalMl)} ml`} />
-            <StatCard
-              label="Día con más agua"
-              value={summary.topDay ? `${formatMl(summary.topDay.totalMl)} ml` : '—'}
-            />
+      <HistoryViewTabs value={view} onChange={setView} />
+
+      <div className="mt-3 flex min-h-0 flex-1 flex-col overflow-hidden">
+        {isLoading ? (
+          <HistorySkeleton />
+        ) : isError ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
+            <p className="text-[14px] text-text-secondary">
+              No se ha podido cargar tu historial. Comprueba tu conexión.
+            </p>
+            <Button variant="surface" onClick={() => void refetch()}>
+              Reintentar
+            </Button>
           </div>
-        </div>
-      )}
+        ) : showEmpty ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-[24px] border border-dashed border-border-soft bg-surface/70 px-6 py-10 text-center">
+            <span className="grid size-14 place-items-center rounded-full bg-water-primary/10 text-water-primary">
+              <Droplets className="size-7" aria-hidden="true" />
+            </span>
+            <div>
+              <p className="text-[17px] font-semibold text-text-primary">
+                {view === 'today' ? 'Sin registros hoy' : 'Aún no hay datos'}
+              </p>
+              <p className="mt-1 max-w-[16rem] text-[13px] leading-relaxed text-text-secondary">
+                {view === 'today'
+                  ? 'Registra agua en la pestaña Hoy para ver tu progreso aquí.'
+                  : 'Registra agua unos días y aquí verás tu evolución semanal y mensual.'}
+              </p>
+            </div>
+          </div>
+        ) : view === 'today' ? (
+          <TodayHistoryPanel summary={summary} reducedMotion={reducedMotion} />
+        ) : view === 'week' ? (
+          <WeekHistoryPanel summary={summary} reducedMotion={reducedMotion} />
+        ) : (
+          <MonthHistoryPanel summary={summary} reducedMotion={reducedMotion} />
+        )}
+      </div>
     </div>
   )
 }

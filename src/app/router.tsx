@@ -10,6 +10,7 @@ import { HistoryPage } from '@/pages/HistoryPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { OnboardingPage } from '@/pages/OnboardingPage'
 import { ProfilePage } from '@/pages/ProfilePage'
+import { SettingsPage } from '@/pages/SettingsPage'
 import { QuickAddPage } from '@/pages/QuickAddPage'
 import { SignUpPage } from '@/pages/SignUpPage'
 import { TodayPage } from '@/pages/TodayPage'
@@ -48,6 +49,7 @@ export function AppRouter() {
           <Route element={<AppLayout />}>
             <Route path={routes.today} element={<TodayPage />} />
             <Route path={routes.history} element={<HistoryPage />} />
+            <Route path={routes.settings} element={<SettingsPage />} />
             <Route path={routes.profile} element={<ProfilePage />} />
           </Route>
         </Route>

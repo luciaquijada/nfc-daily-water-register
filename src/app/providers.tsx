@@ -4,6 +4,7 @@ import { Toaster } from 'sonner'
 import type { ReactNode } from 'react'
 import { AuthProvider } from '@/features/auth/AuthProvider'
 import { OfflineProvider } from '@/features/offline/offline-context'
+import { SettingsProvider } from '@/features/settings/SettingsProvider'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,7 +21,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <OfflineProvider>
-          <BrowserRouter>{children}</BrowserRouter>
+          <SettingsProvider>
+            <BrowserRouter>{children}</BrowserRouter>
+          </SettingsProvider>
           <Toaster position="top-center" richColors offset={16} />
         </OfflineProvider>
       </AuthProvider>

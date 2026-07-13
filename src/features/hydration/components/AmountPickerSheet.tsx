@@ -44,9 +44,9 @@ export function AmountPickerSheet({ open, onOpenChange, onSelect }: AmountPicker
               key={amount}
               type="button"
               onClick={() => selectPreset(amount)}
-              className="flex flex-col items-center gap-0.5 rounded-2xl border border-border-soft bg-surface py-5 transition-colors hover:border-water-primary hover:bg-surface-muted"
+              className="flex flex-col items-center gap-0.5 rounded-2xl border border-border-soft bg-surface py-[clamp(0.75rem,4vw,1.25rem)] transition-colors hover:border-water-primary hover:bg-surface-muted"
             >
-              <span className="text-[22px] font-semibold tabular-nums text-text-primary">
+              <span className="text-[clamp(1.125rem,5vw,1.375rem)] font-semibold tabular-nums text-text-primary">
                 {amount}
               </span>
               <span className="text-[13px] text-text-secondary">ml</span>

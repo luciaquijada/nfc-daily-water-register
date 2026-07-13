@@ -48,6 +48,56 @@ export async function completeOnboarding(
 
 export type ProfileUpdateInput = OnboardingInput
 
+export type ProfileAccountInput = {
+  displayName: string
+}
+
+export type HydrationSettingsInput = {
+  dailyGoalMl: number
+  defaultAmountMl: number
+  timezone: string
+}
+
+export async function updateProfileAccount(
+  userId: string,
+  input: ProfileAccountInput,
+): Promise<Profile> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      display_name: input.displayName,
+    })
+    .eq('id', userId)
+    .select()
+    .single()
+
+  if (error) {
+    throw error
+  }
+  return data
+}
+
+export async function updateHydrationSettings(
+  userId: string,
+  input: HydrationSettingsInput,
+): Promise<Profile> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      daily_goal_ml: input.dailyGoalMl,
+      default_amount_ml: input.defaultAmountMl,
+      timezone: input.timezone,
+    })
+    .eq('id', userId)
+    .select()
+    .single()
+
+  if (error) {
+    throw error
+  }
+  return data
+}
+
 export async function updateProfile(
   userId: string,
   input: ProfileUpdateInput,

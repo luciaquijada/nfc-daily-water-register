@@ -92,7 +92,7 @@ export function OnboardingWizard() {
   }
 
   return (
-    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-6 pb-[max(env(safe-area-inset-bottom),1.5rem)] pt-[max(env(safe-area-inset-top),1.5rem)]">
+    <div className="app-shell scroll-page flex flex-col page-px pb-[max(env(safe-area-inset-bottom),1.5rem)] pt-[max(env(safe-area-inset-top),1.5rem)]">
       <div className="flex items-center gap-3 pt-2">
         <button
           type="button"
@@ -120,9 +120,9 @@ export function OnboardingWizard() {
       </div>
 
       <FormProvider {...form}>
-        <div className="flex flex-1 flex-col justify-center py-8">
-          <header className="mb-6 flex flex-col gap-1">
-            <h1 className="text-[26px] font-semibold text-text-primary">{current?.title}</h1>
+        <div className="flex flex-1 flex-col justify-center py-[clamp(1.5rem,6vh,2rem)]">
+          <header className="mb-[clamp(1rem,4vh,1.5rem)] flex flex-col gap-1">
+            <h1 className="text-heading-xl font-semibold text-text-primary">{current?.title}</h1>
             <p className="text-[15px] text-text-secondary">{current?.subtitle}</p>
           </header>
 

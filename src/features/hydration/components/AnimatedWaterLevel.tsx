@@ -1,5 +1,6 @@
-import { motion, useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 import type { ReactNode } from 'react'
+import { useWaterEntryAnimation, ENTRY_FILL_MS } from '../hooks/use-water-entry-animation'
 import { WaterBubbles } from './WaterBubbles'
 import { WaveLayer } from './WaveLayer'
 
@@ -10,78 +11,119 @@ type AnimatedWaterLevelProps = {
   children?: ReactNode
 }
 
-const WAVE_BAND_HEIGHT = 52
+function WaterShimmer({ active }: { active: boolean }) {
+  if (!active) {
+    return null
+  }
 
-/**
- * Superficie de agua puramente presentacional. Recibe el progreso ya calculado
- * (0..1) y no conoce datos, autenticación ni navegación. El nivel se desplaza con
- * translateY (solo transform) para mantener 60fps; encima, tres capas de onda con
- * ritmos distintos crean el movimiento orgánico de la superficie.
- */
+  return (
+    <>
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-[5%] top-0 h-6 bg-linear-to-r from-transparent via-white/40 to-transparent blur-[2px]"
+        animate={{ x: ['-40%', '40%'], opacity: [0.1, 0.5, 0.1] }}
+        transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/25 via-transparent to-transparent"
+        animate={{ opacity: [0.35, 0.55, 0.35] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+      />
+    </>
+  )
+}
+
 export function AnimatedWaterLevel({
   progress,
-  reducedMotion,
+  reducedMotion = false,
   bubbleTrigger = 0,
   children,
 }: AnimatedWaterLevelProps) {
-  const systemReducedMotion = useReducedMotion()
-  const reduce = reducedMotion ?? systemReducedMotion ?? false
+  const { displayProgress, isEntryAnimating, markEntryComplete } = useWaterEntryAnimation(
+    progress,
+    reducedMotion,
+  )
 
-  const fill = Math.min(Math.max(progress, 0), 1)
+  const fill = Math.min(Math.max(displayProgress, 0), 1)
   const translateY = `${(1 - fill) * 100}%`
+  const hasWater = fill > 0.02
 
   return (
     <div className="absolute inset-0 overflow-hidden">
       <motion.div
         className="absolute inset-0"
-        initial={false}
         animate={{ y: translateY }}
         transition={
-          reduce
+          reducedMotion
             ? { duration: 0.35, ease: 'easeOut' }
-            : { type: 'spring', stiffness: 65, damping: 18, mass: 1 }
+            : isEntryAnimating
+              ? { duration: ENTRY_FILL_MS / 1000, ease: [0.22, 1, 0.36, 1] }
+              : { type: 'spring', stiffness: 52, damping: 15, mass: 1.15 }
         }
+        onAnimationComplete={() => {
+          if (isEntryAnimating) {
+            markEntryComplete()
+          }
+        }}
       >
-        <div
-          className="absolute inset-x-0 bottom-0 bg-linear-to-b from-water-light via-water-primary to-water-deep"
-          style={{ top: WAVE_BAND_HEIGHT - 10 }}
-        />
+        <div className="absolute inset-0 bg-linear-to-b from-water-light/95 via-water-primary to-water-deep" />
 
-        <div className="absolute inset-x-0 top-0" style={{ height: WAVE_BAND_HEIGHT }}>
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-20">
           <WaveLayer
             color="var(--water-deep)"
-            opacity={0.9}
-            amplitude={7}
-            baseline={26}
-            durationSeconds={13}
+            opacity={0.5}
+            amplitude={11}
+            baseline={38}
+            durationSeconds={11}
             direction="rtl"
-            animate={!reduce}
+            animate={!reducedMotion}
+            delay={0}
           />
           <WaveLayer
             color="var(--water-primary)"
-            opacity={0.6}
-            amplitude={11}
-            baseline={20}
-            durationSeconds={10}
+            opacity={0.65}
+            amplitude={9}
+            baseline={34}
+            durationSeconds={8}
             direction="ltr"
-            animate={!reduce}
+            animate={!reducedMotion}
+            delay={0.8}
           />
           <WaveLayer
-            color="var(--water-highlight)"
+            color="var(--water-light)"
             opacity={0.55}
-            amplitude={9}
-            baseline={16}
-            durationSeconds={8}
+            amplitude={7}
+            baseline={30}
+            durationSeconds={6.5}
             direction="rtl"
-            animate={!reduce}
+            animate={!reducedMotion}
+            delay={1.4}
           />
+          <WaveLayer
+            color="#ffffff"
+            opacity={0.22}
+            amplitude={5}
+            baseline={26}
+            durationSeconds={5.5}
+            direction="ltr"
+            animate={!reducedMotion}
+            blendMode="soft-light"
+            delay={0.4}
+          />
+          <WaterShimmer active={!reducedMotion && hasWater} />
         </div>
       </motion.div>
 
-      <WaterBubbles trigger={bubbleTrigger} active={!reduce} />
+      <WaterBubbles
+        trigger={bubbleTrigger}
+        entryActive={isEntryAnimating && hasWater}
+        ambientActive={!reducedMotion && hasWater && !isEntryAnimating}
+        fillLevel={fill}
+      />
 
       {children ? (
-        <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center pb-7">
+        <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center pb-[clamp(0.75rem,3vh,1.25rem)]">
           {children}
         </div>
       ) : null}

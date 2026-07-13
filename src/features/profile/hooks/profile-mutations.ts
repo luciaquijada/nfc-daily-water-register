@@ -2,8 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/features/auth/hooks/useAuth'
 import {
   completeOnboarding,
+  updateHydrationSettings,
   updateProfile,
+  updateProfileAccount,
+  type HydrationSettingsInput,
   type OnboardingInput,
+  type ProfileAccountInput,
   type ProfileUpdateInput,
 } from '../api/profile-api'
 import { profileKeys } from '../query-keys'
@@ -28,6 +32,31 @@ export function useUpdateProfile() {
 
   return useMutation({
     mutationFn: (input: ProfileUpdateInput) => updateProfile(user?.id as string, input),
+    onSuccess: (profile) => {
+      queryClient.setQueryData(profileKeys.detail(user?.id), profile)
+    },
+  })
+}
+
+export function useUpdateProfileAccount() {
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (input: ProfileAccountInput) => updateProfileAccount(user?.id as string, input),
+    onSuccess: (profile) => {
+      queryClient.setQueryData(profileKeys.detail(user?.id), profile)
+    },
+  })
+}
+
+export function useUpdateHydrationSettings() {
+  const { user } = useAuth()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (input: HydrationSettingsInput) =>
+      updateHydrationSettings(user?.id as string, input),
     onSuccess: (profile) => {
       queryClient.setQueryData(profileKeys.detail(user?.id), profile)
     },

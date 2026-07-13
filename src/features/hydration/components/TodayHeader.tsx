@@ -2,24 +2,19 @@ import { Settings } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 type TodayHeaderProps = {
-  userName: string
   onOpenSettings: () => void
 }
 
-export function TodayHeader({ userName, onOpenSettings }: TodayHeaderProps) {
+export function TodayHeader({ onOpenSettings }: TodayHeaderProps) {
   return (
-    <header className="flex items-start justify-between px-6 pt-4">
-      <h1 className="min-w-0">
-        <span className="block text-[16px] font-normal text-text-secondary">Hola,</span>
-        <span className="block truncate text-[26px] font-semibold leading-tight text-text-primary">
-          {userName}
-        </span>
-      </h1>
+    <header className="compact-short flex shrink-0 items-center justify-between page-px pt-2 pb-1">
+      <span className="text-[15px] font-semibold text-water-primary">Glup glup</span>
       <Button
-        variant="surface"
+        variant="ghost"
         size="icon"
         aria-label="Abrir ajustes"
         onClick={onOpenSettings}
+        className="size-9 text-text-secondary hover:text-text-primary"
       >
         <Settings className="h-5 w-5" aria-hidden="true" />
       </Button>

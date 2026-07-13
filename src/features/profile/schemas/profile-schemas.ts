@@ -22,5 +22,15 @@ export const onboardingSchema = z.object({
 
 export type OnboardingValues = z.infer<typeof onboardingSchema>
 
+export const profileAccountSchema = onboardingSchema.pick({ displayName: true })
+export type ProfileAccountValues = z.infer<typeof profileAccountSchema>
+
+export const hydrationSettingsSchema = onboardingSchema.pick({
+  dailyGoalMl: true,
+  defaultAmountMl: true,
+  timezone: true,
+})
+export type HydrationSettingsValues = z.infer<typeof hydrationSettingsSchema>
+
 export const profileUpdateSchema = onboardingSchema
 export type ProfileUpdateValues = OnboardingValues

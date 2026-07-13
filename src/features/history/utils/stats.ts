@@ -80,3 +80,14 @@ export function topDay(totals: ReadonlyArray<DailyTotal>): DailyTotal | null {
   }
   return top
 }
+
+export function countDaysWithData(totals: ReadonlyArray<DailyTotal>): number {
+  return totals.filter((day) => day.totalMl > 0).length
+}
+
+export function goalCompletionRate(totals: ReadonlyArray<DailyTotal>): number {
+  if (totals.length === 0) {
+    return 0
+  }
+  return Math.round((daysGoalMet(totals) / totals.length) * 100)
+}

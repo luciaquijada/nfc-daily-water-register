@@ -1,107 +1,152 @@
-# Gota
+# Glup glup
 
-Aplicación web móvil (PWA, mobile-first) para registrar el agua consumida cada día.
-Diseñada principalmente para iPhone 13 mini (375 × 812).
+A mobile-first Progressive Web App (PWA) for tracking daily water intake. Built for quick logging on the go, with visual progress feedback, history analytics, and NFC shortcut support.
 
-> Nombre provisional. Puede cambiar sin afectar a la arquitectura.
+Primary design target: iPhone 13 mini (375 x 812). The layout adapts to other mobile viewports and supports safe-area insets.
 
-## Stack
+## Features
 
-React 19 · TypeScript (estricto) · Vite 8 · Tailwind CSS v4 · shadcn/ui · Motion ·
-TanStack Query · React Router 7. Backend (Supabase) e IA se incorporan en fases posteriores.
+- **Today view** — Animated water level, daily goal progress, quick-add button, and entry list with edit and delete
+- **History** — Today, week, and month views with charts, streaks, heatmaps, and goal completion metrics
+- **Authentication** — Email sign-up, login, logout, and password recovery via Supabase Auth
+- **Onboarding** — Profile wizard for display name, daily goal, default amount, and timezone
+- **Settings** — Theme (light/dark), language (Spanish/English), and hydration preferences
+- **NFC / Quick Add** — Deep-link route for one-tap logging from NFC tags or home-screen shortcuts
+- **Offline support** — Pending entries stored in IndexedDB and synced when connectivity returns
+- **PWA** — Installable app with service worker caching and Supabase REST network-first strategy
 
-## Requisitos
+## Tech Stack
 
-- Node 20.19+ (probado con 20.20)
-- npm 10+
+| Layer | Technology |
+| --- | --- |
+| UI | React 19, TypeScript (strict), Tailwind CSS v4, Radix UI primitives |
+| Animation | Motion |
+| Routing | React Router 7 |
+| Data fetching | TanStack Query 5 |
+| Forms & validation | React Hook Form, Zod |
+| Charts | Recharts |
+| Backend | Supabase (PostgreSQL, Auth, Row Level Security) |
+| Offline storage | IndexedDB via `idb` |
+| Build | Vite 8, vite-plugin-pwa |
+| Linting | oxlint |
 
-## Puesta en marcha
+## Requirements
+
+- Node.js 20.19 or later (tested with 20.20)
+- npm 10 or later
+- A Supabase project (cloud or local via Docker)
+- Supabase CLI (for migrations and type generation)
+
+## Quick Start
 
 ```bash
+# Install dependencies
 npm install
-cp .env.example .env        # aún sin usar en la Fase 1
-npm run dev                 # http://localhost:5173
+
+# Configure environment
+cp .env.example .env
+# Fill in VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY
+
+# Apply database migrations (see docs/database.md)
+supabase link --project-ref <your-project-ref>
+supabase db push
+
+# Start development server
+npm run dev
 ```
+
+Open [http://localhost:5173](http://localhost:5173).
+
+## Environment Variables
+
+Public variables (embedded in the browser bundle). Never put secrets behind the `VITE_` prefix.
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `VITE_SUPABASE_URL` | Yes | Supabase project URL |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Yes | Supabase publishable (anon) key |
+| `VITE_APP_URL` | No | App origin for auth redirects (default: `http://localhost:5173`) |
+
+See [`.env.example`](.env.example) for the full template.
 
 ## Scripts
 
-| Comando | Descripción |
-|---|---|
-| `npm run dev` | Servidor de desarrollo (Vite + HMR) |
-| `npm run build` | `tsc -b` + build de producción |
-| `npm run lint` | Linter (oxlint) |
-| `npm run preview` | Sirve el build de producción |
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Development server with HMR |
+| `npm run build` | Type-check and production build |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run oxlint |
 
-## Estructura
+## Project Structure
 
-Arquitectura basada en funcionalidades. Las carpetas se crean cuando hay código real que colocar.
+Feature-based architecture. Folders are created when there is real code to place in them.
 
 ```
 src/
-├── app/                    App, providers, router y rutas
+├── app/                 Application shell, providers, router, route constants
 ├── components/
-│   ├── layout/             AppLayout, BottomNavigation, PagePlaceholder
-│   └── ui/                 primitivos (button)
-├── features/hydration/     contador, agua animada, botón gota, burbujas, cálculos puros
-├── pages/                  Today, History, Analytics, Profile
+│   ├── brand/           Logo, splash screen
+│   ├── feedback/        Full-screen states
+│   ├── layout/          App layout, bottom navigation
+│   └── ui/              Shared UI primitives
+├── features/
+│   ├── auth/            Authentication flows and guards
+│   ├── history/         History views, stats, charts
+│   ├── hydration/       Daily logging, offline queue, animations
+│   ├── offline/         Connectivity sync orchestration
+│   ├── onboarding/      First-run profile wizard
+│   ├── profile/         Account and profile management
+│   └── settings/        Theme, locale, hydration preferences
 ├── lib/
-│   ├── env.ts              validación de variables de entorno (Zod)
-│   ├── supabase/           cliente tipado + tipos de la base de datos
-│   └── utils.ts            utilidades (cn)
-└── styles/                 globals.css (design tokens)
+│   ├── env.ts           Environment validation (Zod)
+│   ├── offline/         Network detection utilities
+│   ├── supabase/        Typed Supabase client and database types
+│   └── utils.ts         Shared helpers (e.g. `cn`)
+├── pages/               Route-level page components
+└── styles/              Global CSS and design tokens
 
 supabase/
-├── migrations/             esquema, restricciones, índices, RLS y políticas
-└── tests/                  prueba de aislamiento RLS (pgTAP)
+├── migrations/          Schema, constraints, indexes, RLS policies
+└── tests/               RLS isolation tests (pgTAP)
 ```
 
-## Base de datos (Supabase)
+## Documentation
 
-El esquema vive en `supabase/migrations/` (fuente de verdad reproducible). Para conectarlo:
+| Document | Description |
+| --- | --- |
+| [docs/README.md](docs/README.md) | Documentation index |
+| [docs/architecture.md](docs/architecture.md) | Application architecture and data flow |
+| [docs/development.md](docs/development.md) | Local development, conventions, and tooling |
+| [docs/database.md](docs/database.md) | Schema, migrations, RLS, and Supabase setup |
+| [docs/nfc-quick-add.md](docs/nfc-quick-add.md) | NFC tags and quick-add deep links |
+| [docs/offline-pwa.md](docs/offline-pwa.md) | Offline queue, sync, and PWA configuration |
+| [docs/deployment.md](docs/deployment.md) | Production deployment checklist |
 
-```bash
-# 1. Enlaza un proyecto de Supabase (créalo en supabase.com si no lo tienes)
-supabase link --project-ref <tu-project-ref>
+## Implementation Status
 
-# 2. Aplica las migraciones (tablas, restricciones, índices, RLS y políticas)
-supabase db push
+| Phase | Status | Scope |
+| --- | --- | --- |
+| 1 | Done | Project setup, design system, Today view prototype |
+| 2 | Done | Database schema, RLS, typed Supabase client |
+| 3 | Done | Authentication and protected routes |
+| 4 | Done | Onboarding wizard and profile integration |
+| 5 | Done | Real hydration entries (add, edit, delete, optimistic updates, idempotency) |
+| 6 | Done | History and statistics |
+| 7 | In progress | PWA polish and offline hardening |
+| 8 | Planned | AI features (Supabase Edge Functions) |
+| 9 | Done | NFC / quick-add route |
+| 10 | Planned | Quality gates and production deployment |
 
-# 3. Ejecuta la prueba de aislamiento RLS
-supabase test db
+## Auth Configuration
 
-# 4. Regenera los tipos a partir del esquema real
-supabase gen types typescript --linked > src/lib/supabase/database.types.ts
-```
+In Supabase Dashboard, go to **Authentication > URL Configuration**:
 
-Alternativa 100 % local (Docker): `supabase start` y luego `supabase db reset`.
+- **Site URL**: `http://localhost:5173` (and your production domain)
+- **Redirect URLs**: add `http://localhost:5173/actualizar-contrasena` (and `<your-domain>/actualizar-contrasena`) for password recovery
 
-Después crea tu `.env` a partir de `.env.example`:
+For local development you may disable email confirmation under **Authentication > Providers > Email**. Keep it enabled in production.
 
-- `VITE_SUPABASE_URL` — `https://<ref>.supabase.co` (o la URL local)
-- `VITE_SUPABASE_PUBLISHABLE_KEY` — clave *publishable* (Project Settings → API Keys)
-- `VITE_APP_URL` — `http://localhost:5173`
+## License
 
-Las variables privadas (`OPENAI_API_KEY`, `OPENAI_MODEL`) son secretos de las Edge Functions y **nunca** van en el frontend (Fase 8).
-
-### Configuración de Auth
-
-En Supabase → Authentication → URL Configuration:
-
-- **Site URL**: `http://localhost:5173` (y tu dominio en producción).
-- **Redirect URLs**: añade `http://localhost:5173/actualizar-contrasena` (y `<tu-dominio>/actualizar-contrasena`) para el enlace de recuperación de contraseña.
-
-Para probar el registro sin confirmar el correo en desarrollo, puedes desactivar "Confirm email" en Authentication → Providers → Email (déjalo **activado** en producción).
-
-## Estado por fases
-
-- [x] **Fase 1** — Inicialización y sistema visual (pantalla Hoy con agua animada, datos de prototipo)
-- [x] **Fase 2** — Esquema, RLS, tipos y cliente de Supabase (aplicado y verificado)
-- [x] **Fase 3** — Autenticación (registro, login, logout, recuperación, rutas protegidas)
-- [x] **Fase 4** — Onboarding (wizard de perfil; Hoy usa nombre/objetivo/cantidad reales)
-- [x] **Fase 5** — Registro diario (registros reales: añadir/editar/eliminar/deshacer, optimista e idempotente)
-- [x] **Fase 6** — Historial y estadísticas (resumen semanal con Recharts, rachas, comparativas)
-- [x] **Fase 9** — NFC (ruta `/quick-add` con validación, confirmación e idempotencia)
-- [ ] Fase 7 — PWA y offline
-- [ ] Fases 8 y 10 — IA, calidad y despliegue
-
-La pantalla Hoy sigue usando datos locales; se conectará a Supabase en la Fase 5.
+Private project. All rights reserved unless otherwise specified.

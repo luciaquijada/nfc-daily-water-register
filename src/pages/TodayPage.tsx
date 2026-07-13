@@ -3,7 +3,6 @@ import { useReducedMotion } from 'motion/react'
 import { GlassWater, List } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { routes } from '@/app/routes'
-import { useAuth } from '@/features/auth/hooks/useAuth'
 import { useProfile } from '@/features/profile/hooks/useProfile'
 import { AmountPickerSheet } from '@/features/hydration/components/AmountPickerSheet'
 import { AnimatedWaterLevel } from '@/features/hydration/components/AnimatedWaterLevel'
@@ -19,6 +18,7 @@ import type { HydrationEntry, HydrationSource } from '@/features/hydration/types
 import {
   computeProgress,
   computeRemainingMl,
+  formatMl,
   hasReachedGoal,
   sumEntriesMl,
 } from '@/features/hydration/utils/progress'
@@ -31,7 +31,6 @@ const dateLabelFormatter = new Intl.DateTimeFormat('es-ES', {
 
 export function TodayPage() {
   const navigate = useNavigate()
-  const { user } = useAuth()
   const { data: profile } = useProfile()
   const { timezone } = useTodayKey()
   const prefersReducedMotion = useReducedMotion() ?? false
@@ -44,7 +43,6 @@ export function TodayPage() {
   const [editingEntry, setEditingEntry] = useState<HydrationEntry | null>(null)
   const [bubbleTrigger, setBubbleTrigger] = useState(0)
 
-  const userName = profile?.display_name ?? user?.email?.split('@')[0] ?? 'de nuevo'
   const goalMl = profile?.daily_goal_ml ?? 2000
   const quickAddMl = profile?.default_amount_ml ?? 600
 
@@ -61,8 +59,8 @@ export function TodayPage() {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <TodayHeader userName={userName} onOpenSettings={() => navigate(routes.profile)} />
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-surface">
+      <TodayHeader onOpenSettings={() => navigate(routes.settings)} />
 
       <HydrationCounter
         consumedMl={consumedMl}
@@ -72,36 +70,45 @@ export function TodayPage() {
         reducedMotion={prefersReducedMotion}
       />
 
-      <div className="relative mt-6 flex-1">
+      <div className="relative min-h-0 flex-1 overflow-hidden">
         <AnimatedWaterLevel
           progress={progress}
           reducedMotion={prefersReducedMotion}
           bubbleTrigger={bubbleTrigger}
         >
-          <div className="flex flex-col items-center gap-4">
-            <div className="flex gap-2">
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="flex items-center justify-center gap-[clamp(0.75rem,3vw,1rem)]">
               <button
                 type="button"
                 onClick={() => setPickerOpen(true)}
-                className="flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-[14px] font-medium text-water-primary shadow-[var(--shadow-soft)]"
+                className="flex size-[clamp(2rem,9vw,2.5rem)] shrink-0 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm"
+                aria-label="Elegir cantidad"
               >
-                <GlassWater className="h-4 w-4" aria-hidden="true" />
-                Cantidad
+                <GlassWater className="size-4" aria-hidden="true" />
               </button>
+              <QuickAddButton
+                amountMl={quickAddMl}
+                onAdd={() => addWater(quickAddMl, 'quick_add')}
+                reducedMotion={prefersReducedMotion}
+                showLabel={false}
+              />
               <button
                 type="button"
                 onClick={() => setEntriesOpen(true)}
-                className="flex items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-[14px] font-medium text-water-primary shadow-[var(--shadow-soft)]"
+                className="relative flex size-[clamp(2rem,9vw,2.5rem)] shrink-0 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm"
+                aria-label={`Ver registros${entries.length > 0 ? `, ${entries.length}` : ''}`}
               >
-                <List className="h-4 w-4" aria-hidden="true" />
-                Registros{entries.length > 0 ? ` · ${entries.length}` : ''}
+                <List className="size-4" aria-hidden="true" />
+                {entries.length > 0 ? (
+                  <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-surface text-[10px] font-bold text-water-primary">
+                    {entries.length}
+                  </span>
+                ) : null}
               </button>
             </div>
-            <QuickAddButton
-              amountMl={quickAddMl}
-              onAdd={() => addWater(quickAddMl, 'quick_add')}
-              reducedMotion={prefersReducedMotion}
-            />
+            <span className="hide-short text-[clamp(0.75rem,3vw,0.8125rem)] font-semibold tabular-nums text-white/95">
+              +{formatMl(quickAddMl)} ml
+            </span>
           </div>
         </AnimatedWaterLevel>
       </div>

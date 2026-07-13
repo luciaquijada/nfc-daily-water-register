@@ -26,7 +26,7 @@ export function LoginForm() {
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-1">
-        <h1 className="text-[28px] font-semibold text-text-primary">Inicia sesión</h1>
+        <h1 className="text-heading-xl font-semibold text-text-primary">Inicia sesión</h1>
         <p className="text-[15px] text-text-secondary">Bienvenida de vuelta a Glup glup.</p>
       </header>
 
