@@ -1,0 +1,26 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter } from 'react-router-dom'
+import { Toaster } from 'sonner'
+import type { ReactNode } from 'react'
+import { AuthProvider } from '@/features/auth/AuthProvider'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+})
+
+export function AppProviders({ children }: { children: ReactNode }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BrowserRouter>{children}</BrowserRouter>
+        <Toaster position="top-center" richColors offset={16} />
+      </AuthProvider>
+    </QueryClientProvider>
+  )
+}

@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+
+/*
+  Design tokens de Gota — fuente de verdad de la identidad visual.
+  Los valores crudos viven en :root; se exponen a Tailwind v4 con @theme inline,
+  de modo que las utilidades (bg-*, text-*, rounded-*) los referencian por variable.
+*/
+:root {
+  color-scheme: light;
+
+  --background: #dcecff;
+  --surface: #ffffff;
+  --surface-muted: #f3f4f7;
+  --surface-elevated: #ffffff;
+
+  --water-deep: #2854f4;
+  --water-primary: #337cf0;
+  --water-light: #43a5f5;
+  --water-highlight: #76c4ff;
+
+  --text-primary: #111318;
+  --text-secondary: #8f91a8;
+  --text-on-water: #ffffff;
+
+  --border-soft: #dde0e8;
+
+  --success: #337cf0;
+  --warning: #e9a23b;
+  --error: #db4b4b;
+
+  --radius-small: 12px;
+  --radius-medium: 18px;
+  --radius-large: 26px;
+  --radius-extra-large: 34px;
+
+  --shadow-soft: 0 8px 30px rgb(38 83 180 / 0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-elevated: var(--surface-elevated);
+
+  --color-water-deep: var(--water-deep);
+  --color-water-primary: var(--water-primary);
+  --color-water-light: var(--water-light);
+  --color-water-highlight: var(--water-highlight);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-on-water: var(--text-on-water);
+
+  --color-border-soft: var(--border-soft);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  --radius-sm: var(--radius-small);
+  --radius-md: var(--radius-medium);
+  --radius-lg: var(--radius-large);
+  --radius-xl: var(--radius-extra-large);
+
+  --font-sans:
+    Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+    'Segoe UI', sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--background);
+    color: var(--text-primary);
+    font-family:
+      Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+      'Segoe UI', sans-serif;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+  }
+
+  #root {
+    min-height: 100dvh;
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Animaciones del bottom sheet (Radix espera a que terminen antes de desmontar) */
+@keyframes gota-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes gota-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes gota-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes gota-sheet-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.sheet-overlay[data-state='open'] {
+  animation: gota-overlay-in 0.25s ease-out;
+}
+.sheet-overlay[data-state='closed'] {
+  animation: gota-overlay-out 0.2s ease-in;
+}
+.sheet-content[data-state='open'] {
+  animation: gota-sheet-in 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.sheet-content[data-state='closed'] {
+  animation: gota-sheet-out 0.2s ease-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet-overlay,
+  .sheet-content {
+    animation-duration: 0.01ms;
+  }
+}
