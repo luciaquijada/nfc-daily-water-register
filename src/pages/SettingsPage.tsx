@@ -28,7 +28,7 @@ export function SettingsPage() {
   const [hydrationOpen, setHydrationOpen] = useState(false)
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden px-4 pb-3 pt-3">
+    <div className="scroll-page flex h-full min-h-0 flex-col overflow-x-hidden page-px pb-3 pt-3">
       <header className="flex shrink-0 items-center gap-2 pb-3">
         <Button
           variant="surface"
@@ -38,7 +38,7 @@ export function SettingsPage() {
         >
           <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </Button>
-        <h1 className="text-[22px] font-semibold text-text-primary">
+        <h1 className="text-heading-md font-semibold text-text-primary">
           {translate('settings', 'title')}
         </h1>
       </header>

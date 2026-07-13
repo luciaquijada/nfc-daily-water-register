@@ -123,7 +123,7 @@ export function AnimatedWaterLevel({
       />
 
       {children ? (
-        <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center pb-5">
+        <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center pb-[clamp(0.75rem,3vh,1.25rem)]">
           {children}
         </div>
       ) : null}

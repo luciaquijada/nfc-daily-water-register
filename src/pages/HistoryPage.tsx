@@ -30,14 +30,14 @@ export function HistoryPage() {
       (view !== 'today' && !summary.hasData))
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden px-4 pb-3 pt-4">
+    <div className="scroll-page flex h-full min-h-0 flex-col overflow-x-hidden page-px pb-3 pt-4">
       <header className="shrink-0 pb-3">
-        <h1 className="text-[24px] font-semibold leading-tight text-text-primary">Historial</h1>
+        <h1 className="text-heading-lg font-semibold leading-tight text-text-primary">Historial</h1>
       </header>
 
       <HistoryViewTabs value={view} onChange={setView} />
 
-      <div className="mt-3 flex min-h-0 flex-1 flex-col">
+      <div className="mt-3 flex min-h-0 flex-1 flex-col overflow-hidden">
         {isLoading ? (
           <HistorySkeleton />
         ) : isError ? (

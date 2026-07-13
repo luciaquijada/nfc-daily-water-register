@@ -27,7 +27,7 @@ export function MonthHeatmap({ bars, todayKey }: MonthHeatmapProps) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="mb-2 grid grid-cols-7 gap-1">
+      <div className="mb-2 grid grid-cols-7 gap-[clamp(0.125rem,1vw,0.25rem)]">
         {WEEKDAY_HEADERS.map((label) => (
           <span
             key={label}
@@ -38,7 +38,7 @@ export function MonthHeatmap({ bars, todayKey }: MonthHeatmapProps) {
         ))}
       </div>
 
-      <div className="grid flex-1 grid-cols-7 gap-1 content-start">
+      <div className="grid flex-1 grid-cols-7 gap-[clamp(0.125rem,1vw,0.25rem)] content-start">
         {cells.map((day, index) => {
           if (!day) {
             return <span key={`empty-${index}`} className="aspect-square" aria-hidden="true" />
@@ -69,7 +69,7 @@ export function MonthHeatmap({ bars, todayKey }: MonthHeatmapProps) {
             >
               <span
                 className={cn(
-                  'text-[10px] font-medium tabular-nums',
+                'text-[clamp(0.5625rem,2.5vw,0.625rem)] font-medium tabular-nums',
                   day.goalMet ? 'text-water-primary' : 'text-text-secondary',
                 )}
               >
@@ -83,7 +83,7 @@ export function MonthHeatmap({ bars, todayKey }: MonthHeatmapProps) {
         })}
       </div>
 
-      <div className="mt-3 flex items-center justify-center gap-3 text-[10px] text-text-secondary">
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-text-secondary">
         <span className="inline-flex items-center gap-1">
           <span className="size-2.5 rounded bg-surface-muted/80" /> Sin datos
         </span>

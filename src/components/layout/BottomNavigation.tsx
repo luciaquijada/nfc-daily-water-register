@@ -29,7 +29,7 @@ export function BottomNavigation() {
             <NavLink
               to={item.to}
               end={item.end}
-              className="group flex min-h-[52px] flex-col items-center justify-center gap-1 rounded-lg py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-water-primary/50"
+              className="group flex min-h-[var(--nav-item-min-h)] flex-col items-center justify-center gap-0.5 rounded-lg py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-water-primary/50 max-[580px]:min-h-[44px] max-[580px]:gap-0"
             >
               {({ isActive }) => (
                 <>

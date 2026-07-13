@@ -7,7 +7,7 @@ type TodayHeaderProps = {
 
 export function TodayHeader({ onOpenSettings }: TodayHeaderProps) {
   return (
-    <header className="flex shrink-0 items-center justify-between px-6 pt-2 pb-1">
+    <header className="compact-short flex shrink-0 items-center justify-between page-px pt-2 pb-1">
       <span className="text-[15px] font-semibold text-water-primary">Glup glup</span>
       <Button
         variant="ghost"

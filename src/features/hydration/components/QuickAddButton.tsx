@@ -29,7 +29,7 @@ export function QuickAddButton({
         aria-label={`Añadir ${formatMl(amountMl)} mililitros`}
         whileTap={reduce || disabled ? undefined : { scale: 0.94 }}
         transition={{ type: 'spring', stiffness: 400, damping: 22 }}
-        className="relative block h-[92px] w-[78px] shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-water-primary disabled:opacity-60"
+        className="relative block h-[var(--quick-add-h)] w-[var(--quick-add-w)] shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-water-primary disabled:opacity-60"
       >
         <svg
           viewBox="0 0 100 116"
@@ -42,7 +42,7 @@ export function QuickAddButton({
           />
         </svg>
         <span className="absolute left-1/2 top-[57%] flex -translate-x-1/2 -translate-y-1/2 items-center justify-center">
-          <Plus className="size-7 text-water-primary" strokeWidth={2.5} aria-hidden="true" />
+          <Plus className="size-[clamp(1.25rem,5vw,1.75rem)] text-water-primary" strokeWidth={2.5} aria-hidden="true" />
         </span>
       </motion.button>
       {showLabel ? (

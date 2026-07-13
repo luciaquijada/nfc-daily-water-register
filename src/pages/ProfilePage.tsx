@@ -54,9 +54,9 @@ export function ProfilePage() {
   const [passwordOpen, setPasswordOpen] = useState(false)
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden px-4 pb-3 pt-4">
+    <div className="scroll-page flex h-full min-h-0 flex-col overflow-x-hidden page-px pb-3 pt-4">
       <header className="shrink-0 pb-3 text-center">
-        <h1 className="text-[22px] font-semibold text-text-primary">
+        <h1 className="text-heading-md font-semibold text-text-primary">
           {translate('profile', 'title')}
         </h1>
       </header>

@@ -10,7 +10,7 @@ import { formatMl } from '@/features/hydration/utils/progress'
 
 function QuickAddShell({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col items-center justify-center gap-6 px-6 pb-[max(env(safe-area-inset-bottom),1.5rem)] pt-[max(env(safe-area-inset-top),1.5rem)] text-center">
+    <div className="app-shell scroll-page flex flex-col items-center justify-center gap-[clamp(1rem,4vh,1.5rem)] page-px pb-[max(env(safe-area-inset-bottom),1.5rem)] pt-[max(env(safe-area-inset-top),1.5rem)] text-center">
       {children}
     </div>
   )
@@ -69,9 +69,9 @@ export function QuickAddPage() {
       </span>
       <div className="flex flex-col gap-1">
         <h1 className="text-[18px] text-text-secondary">Registrar agua</h1>
-        <p className="text-[44px] font-bold tabular-nums leading-none text-text-primary">
+        <p className="text-[clamp(2rem,12vw,2.75rem)] font-bold tabular-nums leading-none text-text-primary">
           {formatMl(amount)}
-          <span className="ml-1 text-[22px] font-semibold text-text-secondary">ml</span>
+          <span className="ml-1 text-[clamp(1.125rem,5vw,1.375rem)] font-semibold text-text-secondary">ml</span>
         </p>
       </div>
 

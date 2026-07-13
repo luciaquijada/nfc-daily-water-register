@@ -31,7 +31,7 @@ export function HistoryViewTabs({ value, onChange }: HistoryViewTabsProps) {
             aria-selected={isActive}
             onClick={() => onChange(tabValue)}
             className={cn(
-              'flex items-center justify-center gap-1.5 rounded-xl py-2.5 text-[13px] font-medium transition-all',
+              'flex items-center justify-center gap-1 rounded-xl py-2 text-[clamp(0.6875rem,3vw,0.8125rem)] font-medium transition-all max-[359px]:gap-0.5 max-[359px]:py-1.5',
               isActive
                 ? 'bg-surface text-water-primary shadow-[var(--shadow-soft)]'
                 : 'text-text-secondary hover:text-text-primary',

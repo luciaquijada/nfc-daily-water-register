@@ -65,22 +65,22 @@ export function TodayHistoryPanel({ summary, reducedMotion }: TodayHistoryPanelP
   return (
     <>
       <motion.div
-        className="flex h-full min-h-0 flex-col gap-3"
+        className="flex h-full min-h-0 flex-col section-gap"
         initial={reducedMotion ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
       >
-        <section className="flex shrink-0 flex-col items-center rounded-[24px] bg-surface px-4 py-5 shadow-[var(--shadow-soft)]">
+        <section className="flex shrink-0 flex-col items-center rounded-[24px] bg-surface px-4 py-[clamp(0.75rem,3vh,1.25rem)] shadow-[var(--shadow-soft)]">
           <ProgressRing progress={progress} goalReached={goalReached}>
             <div className="text-center">
-              <p className="text-[34px] font-bold tabular-nums leading-none text-water-primary">
+              <p className="text-[clamp(1.5rem,8vw,2.125rem)] font-bold tabular-nums leading-none text-water-primary">
                 {formatMl(consumedMl)}
               </p>
               <p className="mt-1 text-[12px] font-medium text-text-secondary">ml hoy</p>
             </div>
           </ProgressRing>
 
-          <p className="mt-4 text-center text-[14px] text-text-secondary">
+          <p className="mt-[clamp(0.5rem,2vh,1rem)] text-center text-[14px] text-text-secondary">
             {goalReached ? (
               <span className="font-medium text-water-primary">¡Objetivo cumplido!</span>
             ) : (

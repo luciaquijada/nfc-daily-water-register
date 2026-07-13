@@ -26,7 +26,7 @@ export function MonthHistoryPanel({ summary, reducedMotion }: MonthHistoryPanelP
 
   return (
     <motion.div
-      className="flex h-full min-h-0 flex-col gap-3"
+      className="flex h-full min-h-0 flex-col section-gap"
       initial={reducedMotion ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}

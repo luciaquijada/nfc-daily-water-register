@@ -27,11 +27,13 @@ export function HistorySummaryHeader({
         <p
           className={cn(
             'font-bold tabular-nums leading-none text-text-primary',
-            compact ? 'text-[32px]' : 'text-[38px]',
+            compact
+              ? 'text-[clamp(1.5rem,7vw,2rem)]'
+              : 'text-[clamp(1.75rem,8vw,2.375rem)]',
           )}
         >
           {formatMl(totalMl)}
-          <span className="ml-1 text-[16px] font-semibold text-text-secondary">ml</span>
+          <span className="ml-1 text-[clamp(0.8125rem,3.5vw,1rem)] font-semibold text-text-secondary">ml</span>
         </p>
         {comparisonPct !== null ? (
           <span

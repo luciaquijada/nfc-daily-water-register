@@ -22,13 +22,13 @@ export function HydrationCounter({
   const isCountingUp = !reducedMotion && displayMl !== consumedMl
 
   return (
-    <section className="shrink-0 px-6 pb-1 pt-0.5 text-center">
+    <section className="compact-short shrink-0 page-px pb-1 pt-0.5 text-center">
       <motion.p
         key={isCountingUp ? 'entry' : consumedMl}
         initial={reducedMotion || isCountingUp ? false : { y: 10, opacity: 0.35 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.32, ease: 'easeOut' }}
-        className="text-[clamp(2rem,9vw,2.875rem)] font-bold tabular-nums leading-none tracking-tight text-water-primary"
+        className="text-counter-display font-bold tabular-nums leading-none tracking-tight text-water-primary"
         aria-hidden="true"
       >
         {formatMl(displayMl)}ml

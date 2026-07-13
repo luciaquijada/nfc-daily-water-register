@@ -77,11 +77,11 @@ export function TodayPage() {
           bubbleTrigger={bubbleTrigger}
         >
           <div className="flex flex-col items-center gap-1.5">
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-[clamp(0.75rem,3vw,1rem)]">
               <button
                 type="button"
                 onClick={() => setPickerOpen(true)}
-                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm"
+                className="flex size-[clamp(2rem,9vw,2.5rem)] shrink-0 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm"
                 aria-label="Elegir cantidad"
               >
                 <GlassWater className="size-4" aria-hidden="true" />
@@ -95,7 +95,7 @@ export function TodayPage() {
               <button
                 type="button"
                 onClick={() => setEntriesOpen(true)}
-                className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm"
+                className="relative flex size-[clamp(2rem,9vw,2.5rem)] shrink-0 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-sm"
                 aria-label={`Ver registros${entries.length > 0 ? `, ${entries.length}` : ''}`}
               >
                 <List className="size-4" aria-hidden="true" />
@@ -106,7 +106,7 @@ export function TodayPage() {
                 ) : null}
               </button>
             </div>
-            <span className="text-[13px] font-semibold tabular-nums text-white/95">
+            <span className="hide-short text-[clamp(0.75rem,3vw,0.8125rem)] font-semibold tabular-nums text-white/95">
               +{formatMl(quickAddMl)} ml
             </span>
           </div>
