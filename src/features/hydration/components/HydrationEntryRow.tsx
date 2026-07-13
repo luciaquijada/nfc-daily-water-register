@@ -17,7 +17,7 @@ export function HydrationEntryRow({
   onDelete,
 }: HydrationEntryRowProps) {
   // Un registro optimista aún no tiene id real: no permitimos editarlo/borrarlo.
-  const isPending = entry.id.startsWith('optimistic-')
+  const isPending = entry.id.startsWith('optimistic-') || entry.id.startsWith('pending-')
 
   return (
     <li className="flex items-center gap-3 py-2">

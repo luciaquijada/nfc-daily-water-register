@@ -1,6 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { isBrowserOnline, isNetworkError } from '@/lib/offline/network'
 import { createEntry, deleteEntry, updateEntryAmount } from '../api/hydration-api'
+import { enqueuePendingEntry } from '../offline/pending-entries-db'
+import { pendingToHydrationEntry } from '../offline/pending-to-entry'
 import { hydrationKeys } from '../query-keys'
 import type { HydrationEntry, HydrationSource } from '../types'
 import { useTodayKey } from './use-today-key'
@@ -14,20 +17,70 @@ type AddVars = {
 
 type OptimisticContext = { previous: HydrationEntry[] }
 
+async function persistEntry(
+  userId: string,
+  vars: AddVars,
+): Promise<HydrationEntry> {
+  const consumedAt = vars.consumedAt ?? new Date().toISOString()
+  const input = {
+    userId,
+    amountMl: vars.amountMl,
+    source: vars.source,
+    clientRequestId: vars.clientRequestId,
+    consumedAt,
+  }
+
+  if (!isBrowserOnline()) {
+    await enqueuePendingEntry({
+      userId,
+      amountMl: vars.amountMl,
+      source: vars.source,
+      clientRequestId: vars.clientRequestId,
+      consumedAt,
+      queuedAt: new Date().toISOString(),
+    })
+    return pendingToHydrationEntry({
+      userId,
+      amountMl: vars.amountMl,
+      source: vars.source,
+      clientRequestId: vars.clientRequestId,
+      consumedAt,
+      queuedAt: new Date().toISOString(),
+    })
+  }
+
+  try {
+    return await createEntry(input)
+  } catch (error) {
+    if (isNetworkError(error)) {
+      await enqueuePendingEntry({
+        userId,
+        amountMl: vars.amountMl,
+        source: vars.source,
+        clientRequestId: vars.clientRequestId,
+        consumedAt,
+        queuedAt: new Date().toISOString(),
+      })
+      return pendingToHydrationEntry({
+        userId,
+        amountMl: vars.amountMl,
+        source: vars.source,
+        clientRequestId: vars.clientRequestId,
+        consumedAt,
+        queuedAt: new Date().toISOString(),
+      })
+    }
+    throw error
+  }
+}
+
 export function useAddEntry() {
   const queryClient = useQueryClient()
   const { userId, dayKey } = useTodayKey()
   const key = hydrationKeys.day(userId, dayKey)
 
   return useMutation({
-    mutationFn: (vars: AddVars) =>
-      createEntry({
-        userId: userId as string,
-        amountMl: vars.amountMl,
-        source: vars.source,
-        clientRequestId: vars.clientRequestId,
-        consumedAt: vars.consumedAt,
-      }),
+    mutationFn: (vars: AddVars) => persistEntry(userId as string, vars),
     onMutate: async (vars): Promise<OptimisticContext> => {
       await queryClient.cancelQueries({ queryKey: key })
       const previous = queryClient.getQueryData<HydrationEntry[]>(key) ?? []

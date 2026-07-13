@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import type { ReactNode } from 'react'
 import { AuthProvider } from '@/features/auth/AuthProvider'
+import { OfflineProvider } from '@/features/offline/offline-context'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,8 +19,10 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <BrowserRouter>{children}</BrowserRouter>
-        <Toaster position="top-center" richColors offset={16} />
+        <OfflineProvider>
+          <BrowserRouter>{children}</BrowserRouter>
+          <Toaster position="top-center" richColors offset={16} />
+        </OfflineProvider>
       </AuthProvider>
     </QueryClientProvider>
   )
