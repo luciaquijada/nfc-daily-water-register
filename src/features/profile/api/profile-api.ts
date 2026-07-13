@@ -45,3 +45,27 @@ export async function completeOnboarding(
   }
   return data
 }
+
+export type ProfileUpdateInput = OnboardingInput
+
+export async function updateProfile(
+  userId: string,
+  input: ProfileUpdateInput,
+): Promise<Profile> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      display_name: input.displayName,
+      daily_goal_ml: input.dailyGoalMl,
+      default_amount_ml: input.defaultAmountMl,
+      timezone: input.timezone,
+    })
+    .eq('id', userId)
+    .select()
+    .single()
+
+  if (error) {
+    throw error
+  }
+  return data
+}

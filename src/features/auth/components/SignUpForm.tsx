@@ -19,7 +19,7 @@ function ConfirmEmailNotice({ email }: { email: string }) {
       <h1 className="text-[24px] font-semibold text-text-primary">Revisa tu correo</h1>
       <p className="text-[15px] text-text-secondary">
         Te hemos enviado un enlace a <span className="text-text-primary">{email}</span> para
-        confirmar tu cuenta. Ábrelo para empezar a usar Gota.
+        confirmar tu cuenta. Ábrelo para empezar a usar Glup glup.
       </p>
       <Link
         to={routes.login}

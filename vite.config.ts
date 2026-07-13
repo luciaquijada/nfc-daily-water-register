@@ -11,7 +11,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons/*.png'],
+      includeAssets: ['logo.png', 'icons/*.png'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         navigateFallback: 'index.html',
@@ -35,9 +35,9 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: 'Gota',
-        short_name: 'Gota',
-        description: 'Gota — registra el agua que bebes cada día de forma rápida y visual.',
+        name: 'Glup glup',
+        short_name: 'Glup glup',
+        description: 'Glup glup — registra el agua que bebes cada día de forma rápida y visual.',
         theme_color: '#dcecff',
         background_color: '#dcecff',
         display: 'standalone',

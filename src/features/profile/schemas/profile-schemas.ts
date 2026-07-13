@@ -21,3 +21,6 @@ export const onboardingSchema = z.object({
 })
 
 export type OnboardingValues = z.infer<typeof onboardingSchema>
+
+export const profileUpdateSchema = onboardingSchema
+export type ProfileUpdateValues = OnboardingValues
