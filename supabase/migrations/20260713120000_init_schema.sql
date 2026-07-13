@@ -1,5 +1,5 @@
 -- Gota · Esquema inicial
--- Tablas: profiles, hydration_entries, ai_insights.
+-- Tablas: profiles, hydration_entries.
 -- Incluye triggers de updated_at y creación automática de perfil al registrarse.
 -- gen_random_uuid() forma parte del core de Postgres 13+ (no requiere pgcrypto).
 
@@ -56,26 +56,6 @@ comment on table public.hydration_entries is
 
 create index hydration_entries_user_consumed_at_idx
   on public.hydration_entries (user_id, consumed_at desc);
-
--- ---------------------------------------------------------------------------
--- ai_insights: análisis de IA cacheados
--- La escritura queda reservada a la Edge Function (service_role) en la Fase 8.
--- ---------------------------------------------------------------------------
-create table public.ai_insights (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users (id) on delete cascade,
-  period_start date not null,
-  period_end date not null,
-  insight_type text not null,
-  content jsonb not null,
-  created_at timestamptz not null default now()
-);
-
-comment on table public.ai_insights is
-  'Análisis de IA reutilizables. Escritura reservada a la Edge Function (service_role).';
-
-create index ai_insights_user_period_idx
-  on public.ai_insights (user_id, period_start desc);
 
 -- ---------------------------------------------------------------------------
 -- updated_at automático en cada UPDATE

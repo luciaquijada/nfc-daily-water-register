@@ -4,7 +4,6 @@
 
 alter table public.profiles enable row level security;
 alter table public.hydration_entries enable row level security;
-alter table public.ai_insights enable row level security;
 
 -- ---------------------------------------------------------------------------
 -- profiles: el usuario lee, crea y actualiza únicamente su propio perfil.
@@ -41,13 +40,4 @@ create policy "hydration_entries_update_own"
 
 create policy "hydration_entries_delete_own"
   on public.hydration_entries for delete to authenticated
-  using ((select auth.uid()) = user_id);
-
--- ---------------------------------------------------------------------------
--- ai_insights: solo lectura para el usuario.
--- La escritura la realiza la Edge Function 'hydration-coach' con la
--- service_role key (Fase 8), que omite RLS. No se expone INSERT a authenticated.
--- ---------------------------------------------------------------------------
-create policy "ai_insights_select_own"
-  on public.ai_insights for select to authenticated
   using ((select auth.uid()) = user_id);

@@ -5,7 +5,6 @@ import { RequireAnon } from '@/features/auth/components/RequireAnon'
 import { RequireAuth } from '@/features/auth/components/RequireAuth'
 import { RedirectIfOnboarded } from '@/features/onboarding/components/RedirectIfOnboarded'
 import { RequireOnboarding } from '@/features/onboarding/components/RequireOnboarding'
-import { AnalyticsPage } from '@/pages/AnalyticsPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { HistoryPage } from '@/pages/HistoryPage'
 import { LoginPage } from '@/pages/LoginPage'
@@ -49,7 +48,6 @@ export function AppRouter() {
           <Route element={<AppLayout />}>
             <Route path={routes.today} element={<TodayPage />} />
             <Route path={routes.history} element={<HistoryPage />} />
-            <Route path={routes.analytics} element={<AnalyticsPage />} />
             <Route path={routes.profile} element={<ProfilePage />} />
           </Route>
         </Route>

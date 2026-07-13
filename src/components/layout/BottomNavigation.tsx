@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { ChartColumn, Droplet, History, User } from 'lucide-react'
+import { Droplet, History, User } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { routes } from '@/app/routes'
 import { cn } from '@/lib/utils'
@@ -14,7 +14,6 @@ type NavItem = {
 const navItems: NavItem[] = [
   { to: routes.today, label: 'Hoy', icon: Droplet, end: true },
   { to: routes.history, label: 'Historial', icon: History },
-  { to: routes.analytics, label: 'Análisis', icon: ChartColumn },
   { to: routes.profile, label: 'Perfil', icon: User },
 ]
 

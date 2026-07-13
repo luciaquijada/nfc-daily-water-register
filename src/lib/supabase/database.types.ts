@@ -90,36 +90,6 @@ export type Database = {
         }
         Relationships: []
       }
-      ai_insights: {
-        Row: {
-          id: string
-          user_id: string
-          period_start: string
-          period_end: string
-          insight_type: string
-          content: Json
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          period_start: string
-          period_end: string
-          insight_type: string
-          content: Json
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          period_start?: string
-          period_end?: string
-          insight_type?: string
-          content?: Json
-          created_at?: string
-        }
-        Relationships: []
-      }
     }
     Views: Record<never, never>
     Functions: Record<never, never>

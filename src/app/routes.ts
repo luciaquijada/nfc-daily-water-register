@@ -1,7 +1,6 @@
 export const routes = {
   today: '/',
   history: '/historial',
-  analytics: '/analisis',
   profile: '/perfil',
   login: '/login',
   signUp: '/registro',
